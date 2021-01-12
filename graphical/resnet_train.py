@@ -39,15 +39,15 @@ print('Init dataloader...')
 
 
 # where the data is located, must contains two folders 'train' and 'valid', each containing subfolders w.r.t to categories
-path = '/dlabdata1/lugeon/websites_alexa_20_000_screenshots/'
+path = '/dlabdata1/lugeon/dmozfinalset/dmoz_visual_lang_screenshots/'
 #path = '/dlabdata1/lugeon/websites_alexa_mp2_1500_9cat_screenshots/'
 
-batch_size = 200
+batch_size = 256
 
 # dimensions of the screeshots
 valid_xdim = 640 # 640
 valid_ydim = 360 # 360
-crop_factor = 0.7
+crop_factor = 0.6
 
 crop_dim = [int(crop_factor * valid_ydim), int(crop_factor * valid_xdim)]
 
@@ -83,7 +83,7 @@ dataloaders_dict = {x: torch.utils.data.DataLoader(images_dict[x],
 # *********************************** build model ***********************************
     
 
-out_dim = 16 # number of classes
+out_dim = 13 # number of classes
 features_dim = 512 # number of features before the classifier
 
 class Webnet(nn.Module):
@@ -94,17 +94,14 @@ class Webnet(nn.Module):
         
         self.features = torch.nn.Sequential(*list(resnet.children())[:-1])
         
-        self.fc1 = torch.nn.Linear(features_dim, features_dim)
-        self.fc2 = torch.nn.Linear(features_dim, out_dim)
+        self.fc1 = torch.nn.Linear(features_dim, out_dim)
         
-        #self.drop = torch.nn.Dropout(0.7)
+        self.drop = torch.nn.Dropout(0.5)
 
     def forward(self, x):
         x = self.features(x).reshape(-1, features_dim)
         #x = self.drop(x)
         x = self.fc1(x)
-        #x = self.drop(x)
-        x = self.fc2(F.relu(x))
         return x
     
 
@@ -260,8 +257,9 @@ finally:
     now = datetime.now()
     now_string = now.strftime("%d-%m-%y_%H-%M")
     
-    torch.save(model, '/scratch/lugeon/' + "webnet_" + now_string)
+    torch.save(model, '/scratch/lugeon/webnets/' + "webnet_" + now_string)
     
+    """
     fig, ax1 = plt.subplots(figsize=(8, 6))
 
 
@@ -283,4 +281,14 @@ finally:
 
     ax2.legend(loc='upper right')
     plt.savefig('train_plots/' + 'training_' + now_string)
+    
+    """
+    
+
+    
+    filename = 'training_' + now_string
+    
+    with open('/home/lugeon/website_classification/graphical/train_plots/' + filename, 'w') as f:
+        for i in range(len(test_acc_hist)):
+            f.write("{} {} {} {}\n".format(train_loss_hist[i], test_loss_hist[i], train_acc_hist[i], test_acc_hist[i]))
     

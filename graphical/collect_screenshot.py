@@ -20,11 +20,11 @@ def main():
     """ entry point """
     
     # file that contains the urls
-    folder = "/dlabdata1/lugeon/"
-    file_name = "websites_alexa_20_000_train"
+    folder = "/dlabdata1/lugeon/dmozfinalset/"
+    file_name = "dmoz_jap"
     ext = ".gz"
     
-    test_train = True
+    test_train = False
     
     if test_train:
         out_folder = folder + file_name[:-5] + "screenshots/" + file_name[-5:] + '/'
@@ -61,8 +61,6 @@ def main():
         
     chunk_size = 50
     
-    nb_cpu = int(24)
-    #nb_cpu = 1
     pool = mp.Pool()
     
     manager = mp.Manager()
@@ -120,7 +118,7 @@ def take_screenshot(url, out_path, qs, qe):
             
         timeout = 10
         
-        r = requests.head(url, timeout=timeout)
+        r = requests.head('http://' + url, timeout=timeout)
         
         
         # check that the html status code is valid and that the accessed resource is an html page 
@@ -130,10 +128,10 @@ def take_screenshot(url, out_path, qs, qe):
         
         two_status_code = status_code.startswith('2')
         three_status_code = status_code.startswith('3')
-        #nice_status_code = status_code in ['200']
         
         nice_content_type = content_type.startswith('text/html')
         
+        # because we used the head method rather than the get method, returned headers are different (e.g https websites)
         ok = (two_status_code and nice_content_type) or three_status_code
         
         if not(ok):
@@ -149,9 +147,7 @@ def take_screenshot(url, out_path, qs, qe):
         prefs["download.prompt_for_download"] = True
         prefs["download.default_directory"] = "/dlabdata1/lugeon/downloads"
         
-        # disable windows like cookies  
-        #options.addArguments("--disable-notifications");
-        #options.addArguments("disable-infobars");
+        # disable windows like cookies -- doesn'r really work
         prefs["profile.default_content_setting_values.notifications"] = 2
         prefs["profile.default_content_settings.cookies"] = 2
         
@@ -160,18 +156,9 @@ def take_screenshot(url, out_path, qs, qe):
         
         driver.set_page_load_timeout(timeout)
         driver.set_window_size(in_width, in_height)
-        
-        if url.endswith('/'):
-            _404 = 'onerandompage'
-        else:
-            _404 = '/onerandompage'
-            
-        driver.get(url + _404)
-        time.sleep(1)
-        driver.add_cookie({"name": "foo", "value": "bar"})
 
         # access the url, takes a screenshot (only in png)
-        driver.get(url)
+        driver.get('http://' + url)
         time.sleep(2) # so that the website's elements are loaded
         driver.save_screenshot(out_path + '.png')
 

@@ -12,16 +12,16 @@ from tqdm import tqdm
 def main():
     """"Entry point"""
 
-    folder = '/dlabdata1/lugeon/'
-    name = "websites_alexa_mostpop2"
+    folder = '/dlabdata1/lugeon/dmozfinalset/'
+    name = 'dmoz_jap'
     ext = '.gz'
     
     step = 100
     timeout = 10
-    nb_samples = 20061
+    nb_samples = 10400
 
-    data = pd.read_csv(folder + name + ext, header=0, names=['uid', 'url', 'cat0', 'subcat0'])
-    data = data[['uid', 'url', 'cat0']]
+    data = pd.read_csv(folder + name + ext, header=0, index_col=0)
+    data = data[['uid', 'url', 'cat0', 'lang']]
     
     print('retrieving html pages from', name)
     
@@ -37,8 +37,11 @@ def get_homepage(url, timeout):
     """Return the html page corresponding to the url, or None if there was a request error"""
 
     try:
-        r = requests.get(url, timeout=timeout)
-        return r.text, r.status_code
+        r = requests.get("http://" + url, timeout=timeout)
+        text = r.text
+        code = r.status_code
+        content = r.headers.get('content-type', '?').strip()
+        return text, code, content
     except Exception as e:
         return None
 
@@ -58,15 +61,17 @@ def worker(start_id, end_id, df, q, timeout):
 
     # copying the df and retrieving the html pages
     sliced_df = df.iloc[start_id: end_id].copy()
-    sliced_df['html_n_errcode'] = sliced_df.apply(lambda row: get_homepage(row.url, timeout), axis=1)
+    sliced_df['homepage'] = sliced_df.apply(lambda row: get_homepage(row.url, timeout), axis=1)
 
     # putting in the queue
     sliced_df.apply(lambda row: q.put({
         'uid': row.uid,
         'url': row.url,
-        'html': none_or_subscriptable(row.html_n_errcode, 0),
-        'errcode': none_or_subscriptable(row.html_n_errcode, 1),
-        'cat': row.cat0
+        'html': none_or_subscriptable(row.homepage, 0),
+        'errcode': none_or_subscriptable(row.homepage, 1),
+        'content': none_or_subscriptable(row.homepage, 2),
+        'cat0': row.cat0,
+        'lang': row.lang
     }), axis=1)
 
     return
