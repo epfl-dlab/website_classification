@@ -1,4 +1,6 @@
-# Semester project: Language-independent websites embeddings
+# Language-independent websites embeddings
 
-This repository contains the code supporting the semester project semester. The project report can be found under .
+This repository contains the code supporting the semester project. The project report can be found under ??.
+
+The code is arranged by folders, depending of the 
 
