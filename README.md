@@ -1,6 +1,6 @@
 # Semester projet: language-independent websites embeddings
 
-This repository contains the code supporting the semester project. The project report can be found here(websites_embeddings_report.pdf) ??. The code is separated in folders, depending on its scope. 
+This repository contains the code supporting the semester project. The project report can be found [here](websites_embeddings_report.pdf). The code is separated in folders, depending on its scope. 
 
 The most important files are the following, listed in the order to use them for computing websites embeddings:
 
