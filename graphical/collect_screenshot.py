@@ -17,14 +17,14 @@ import multiprocessing as mp
 from tqdm import tqdm
 
 def main():
-    """ entry point """
+    """ This script take screenshots and store them as jpeg files from a list of urls"""
     
     # file that contains the urls
     folder = "/dlabdata1/lugeon/dmozfinalset/"
     file_name = "dmoz_jap"
     ext = ".gz"
     
-    test_train = False
+    test_train = False # if the files corresponds to already splitted samples, i.e end with "train" or "valid"
     
     if test_train:
         out_folder = folder + file_name[:-5] + "screenshots/" + file_name[-5:] + '/'

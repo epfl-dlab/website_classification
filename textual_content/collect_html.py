@@ -10,8 +10,11 @@ from tqdm import tqdm
 
 
 def main():
-    """"Entry point"""
+    """
+    This script access urls and store their HTML file in a json format 
+    """
 
+    # urls 
     folder = '/dlabdata1/lugeon/dmozfinalset/'
     name = 'dmoz_jap'
     ext = '.gz'

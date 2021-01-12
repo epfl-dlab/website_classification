@@ -18,25 +18,12 @@ from requests.exceptions import RequestException
 
 
 def main():
-    
+    """
+    This script compute the textual embeddings from a json file containing HTML responses,
+    The embedding are then stored into a dataframe and written on the disk
+    """
     
 
-    
-    """
-    df = pd.read_csv('/dlabdata1/lugeon/websites_alexa_mostpop.gz', index_col=0)
-    url_list = df.url.values
-    
-    embeddings, errors = embed(url_list, mode='content', aggregation='average', workers=24)
-    
-    df['embedding'] = embeddings
-    df['error'] = errors
-    print(df)
-    
-    df.to_csv('/dlabdata1/lugeon/websites_alexa_mostpop_finalemb.gz', compression='gzip')
-    """
-
-    
-    
     basefile = '/dlabdata1/lugeon/dmozfinalset/dmoz_jap'
     ext = '_html.json.gz'
     nb_samples = 10400
