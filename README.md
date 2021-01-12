@@ -1,6 +1,6 @@
 # Language-independent websites embeddings
 
-This repository contains the code supporting the semester project semester. The project report can be found under ??. The code is separated in folders, depending on the scope. 
+This repository contains the code supporting the semester project semester. The project report can be found under ??. The code is separated in folders, depending on its scope. 
 
 The most important files are the following:
 
@@ -10,3 +10,10 @@ The most important files are the following:
 - graphical/**compute_visual_embeddings.ipynb** to embed the screenshots of websites using the trained CVM
 - final/**get_textual_embeddings.py** to get the textual embedding from the HTML responses
 - final/**final_model.ipynb** for joining the textual and visual embeddings of websites and train classifiers 
+
+The required libraries and their version are:
+- beautifulsoup 4.9.3
+- sentence-transformers 0.3.9
+- pytorch 1.5.0
+- torchvison 0.6.0
+- selenium 3.141.0
